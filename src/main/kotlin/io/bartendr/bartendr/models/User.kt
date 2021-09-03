@@ -8,39 +8,19 @@ import javax.persistence.*
 class User(
     @Column(name = "email") var email: String,
     @Column(name = "password") var password: String = "",
-    @Column(name = "enabled") var enabled: Boolean = true,
+    @Column(name = "enabled") var enabled: Boolean = false,
     @Column(name = "first_name") var firstName: String,
     @Column(name = "last_name") var lastName: String
 ) : BaseEntity() {
 
-//    @Column(name = "email")
-//    var email: String? = null
-//        private set
-//
-//    @Column(name = "password")
-//    var password: String? = null
-//
-//    @Column(name = "enabled")
-//    var enabled = false
-//
-//    @Column(name = "first_name")
-//    var firstName: String? = null
-//
-//    @Column(name = "last_name")
-//    var lastName: String? = null
-
-//    constructor() : this()
-//    constructor(email: String?, firstName: String?, lastName: String?) : super() {
-//        this.email = email
-//        this.firstName = firstName
-//        this.lastName = lastName
-//    }
-
     override fun hashCode(): Int {
-        val prime = 31
-        var result = 1
-        result = prime * result + email.hashCode()
-        return result
+        return (id?.toInt() ?: -1) *
+                (email.hashCode() +
+                        password.hashCode() +
+                        enabled.hashCode() +
+                        firstName.hashCode() +
+                        lastName.hashCode()
+                        )
     }
 
     override fun equals(other: Any?): Boolean {
@@ -50,11 +30,8 @@ class User(
         if (other == null) {
             return false
         }
-        if (javaClass != other.javaClass) {
-            return false
-        }
-        val user = other as User
-        return email == user.email
+        if(other is User) return email == other.email
+        return false
     }
 
     override fun toString(): String {
