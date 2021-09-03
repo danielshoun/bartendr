@@ -26,7 +26,7 @@ class AuthProcessingFilter :
                 MutableMap::class.java
             )
             if (requestMap != null) {
-                username = requestMap["email"] as String
+                username = (requestMap["email"] as String).lowercase()
                 password = requestMap["password"] as String
                 request.setAttribute("rememberMe", requestMap["rememberMe"])
             } else {

@@ -19,7 +19,7 @@ class AuthService {
 
     fun registerNewUser(registerNewUserForm: RegisterNewUserForm, bindingResult: BindingResult): SelfUserDto {
         val user = User(
-            email = registerNewUserForm.email,
+            email = registerNewUserForm.email.lowercase(),
             firstName = registerNewUserForm.firstName,
             lastName = registerNewUserForm.lastName
         )
