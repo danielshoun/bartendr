@@ -28,7 +28,16 @@ class AuthController {
 
     @PostMapping("/register")
     @ResponseBody
-    fun registerNewUser(@Valid @RequestBody registerNewUserForm: RegisterNewUserForm, bindingResult: BindingResult): SelfUserDto {
+    fun registerNewUser(
+        @Valid @RequestBody registerNewUserForm: RegisterNewUserForm,
+        bindingResult: BindingResult
+    ): SelfUserDto {
         return authService.registerNewUser(registerNewUserForm, bindingResult)
+    }
+
+    @PostMapping("/email-ver/{token}")
+    @ResponseBody
+    fun verifyEmail(@PathVariable(required = true, name = "token") token: String): String {
+        return authService.verifyEmail(token)
     }
 }

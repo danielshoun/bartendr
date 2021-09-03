@@ -8,9 +8,11 @@ import io.bartendr.bartendr.repositories.EmailVerTokenRepository
 import io.bartendr.bartendr.repositories.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.http.HttpStatus
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.validation.BindingResult
+import org.springframework.web.server.ResponseStatusException
 
 @Service
 class AuthService {
@@ -51,5 +53,14 @@ class AuthService {
         )
 
         return SelfUserDto(user)
+    }
+
+    fun verifyEmail(token: String): String {
+        val emailVerToken = emailVerTokenRepository.findByToken(token)
+            ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Token not found.")
+        emailVerToken.user.enabled = true
+        userRepository.save(emailVerToken.user)
+        emailVerTokenRepository.delete(emailVerToken)
+        return "Verified."
     }
 }
