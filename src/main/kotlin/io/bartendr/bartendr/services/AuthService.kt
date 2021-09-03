@@ -7,17 +7,24 @@ import io.bartendr.bartendr.models.dtos.SelfUserDto
 import io.bartendr.bartendr.repositories.EmailVerTokenRepository
 import io.bartendr.bartendr.repositories.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.validation.BindingResult
 
 @Service
 class AuthService {
+    @Value("\${env.type}")
+    lateinit var envType: String
+
     @Autowired
     lateinit var userRepository: UserRepository
 
     @Autowired
     lateinit var emailVerTokenRepository: EmailVerTokenRepository
+
+    @Autowired
+    lateinit var emailService: EmailService
 
     @Autowired
     lateinit var passwordEncoder: PasswordEncoder
@@ -33,6 +40,16 @@ class AuthService {
 
         val emailVerToken = EmailVerToken(user)
         emailVerTokenRepository.save(emailVerToken)
+        emailService.sendHtmlMessage(
+            to = user.email,
+            subject = "[Bartendr.io] Account Activation",
+            htmlBody = """
+                Thank you for registering with Bartendr.io! Your account activation link is below.
+                
+                ${if (envType == "production") "https://bartendr.io" else "http://localhost:8080"}/email-ver/${emailVerToken.token}
+            """.trimIndent()
+        )
+
         return SelfUserDto(user)
     }
 }

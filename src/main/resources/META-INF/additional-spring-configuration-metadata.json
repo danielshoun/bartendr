@@ -14,5 +14,10 @@
       "name": "jwt.expiration.time",
       "type": "java.lang.String",
       "description": "Description for jwt.expiration.time."
+    },
+    {
+      "name": "env.type",
+      "type": "java.lang.String",
+      "description": "Description for env.type."
     }
   ] }
