@@ -1,7 +1,9 @@
 package io.bartendr.bartendr.controllers
 
 import io.bartendr.bartendr.config.security.UserPrincipal
+import io.bartendr.bartendr.forms.ForgotPasswordForm
 import io.bartendr.bartendr.forms.RegisterNewUserForm
+import io.bartendr.bartendr.forms.ResetPasswordForm
 import io.bartendr.bartendr.models.User
 import io.bartendr.bartendr.models.dtos.SelfUserDto
 import io.bartendr.bartendr.services.AuthService
@@ -28,16 +30,28 @@ class AuthController {
 
     @PostMapping("/register")
     @ResponseBody
-    fun registerNewUser(
-        @Valid @RequestBody registerNewUserForm: RegisterNewUserForm,
-        bindingResult: BindingResult
-    ): SelfUserDto {
-        return authService.registerNewUser(registerNewUserForm, bindingResult)
+    fun registerNewUser(@Valid @RequestBody registerNewUserForm: RegisterNewUserForm): SelfUserDto {
+        return authService.registerNewUser(registerNewUserForm)
     }
 
     @PostMapping("/email-ver/{token}")
     @ResponseBody
     fun verifyEmail(@PathVariable(required = true, name = "token") token: String): String {
         return authService.verifyEmail(token)
+    }
+
+    @PostMapping("/forgot-password")
+    @ResponseBody
+    fun forgotPassword(@Valid @RequestBody forgotPasswordForm: ForgotPasswordForm): String {
+        return authService.forgotPassword(forgotPasswordForm)
+    }
+
+    @PostMapping("/reset-password/{token}")
+    @ResponseBody
+    fun resetPassword(
+        @PathVariable(required = true, name = "token") token: String,
+        @Valid @RequestBody resetPasswordForm: ResetPasswordForm
+    ): String {
+        return authService.resetPassword(token, resetPasswordForm)
     }
 }

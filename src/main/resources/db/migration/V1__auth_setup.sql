@@ -18,4 +18,13 @@ CREATE TABLE email_ver_tokens(
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL,
     CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users(id)
-)
+);
+
+CREATE TABLE password_reset_tokens(
+    id SERIAL PRIMARY KEY NOT NULL,
+    user_id INT UNIQUE NOT NULL,
+    token VARCHAR(36) UNIQUE NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL,
+    CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users(id)
+);
