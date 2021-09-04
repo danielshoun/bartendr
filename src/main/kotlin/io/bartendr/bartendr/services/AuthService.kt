@@ -16,6 +16,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
+import javax.servlet.http.Cookie
+import javax.servlet.http.HttpServletResponse
 
 @Service
 class AuthService {
@@ -94,5 +96,13 @@ class AuthService {
         userRepository.save(passwordResetToken.user)
         passwordResetTokenRepository.delete(passwordResetToken)
         return "Password changed successfully."
+    }
+
+    fun logout(response: HttpServletResponse): String {
+        val cookie = Cookie("TOKEN", null)
+        cookie.isHttpOnly = true
+        cookie.maxAge = 0
+        response.addCookie(cookie)
+        return "Log out successful."
     }
 }

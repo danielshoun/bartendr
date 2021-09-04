@@ -4,14 +4,13 @@ import io.bartendr.bartendr.config.security.UserPrincipal
 import io.bartendr.bartendr.forms.ForgotPasswordForm
 import io.bartendr.bartendr.forms.RegisterNewUserForm
 import io.bartendr.bartendr.forms.ResetPasswordForm
-import io.bartendr.bartendr.models.User
 import io.bartendr.bartendr.models.dtos.SelfUserDto
 import io.bartendr.bartendr.services.AuthService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication
-import org.springframework.validation.BindingResult
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
+import javax.servlet.http.HttpServletResponse
 import javax.validation.Valid
 
 @RestController
@@ -53,5 +52,11 @@ class AuthController {
         @Valid @RequestBody resetPasswordForm: ResetPasswordForm
     ): String {
         return authService.resetPassword(token, resetPasswordForm)
+    }
+
+    @DeleteMapping("/logout")
+    @ResponseBody
+    fun logout(response: HttpServletResponse): String {
+        return authService.logout(response)
     }
 }
