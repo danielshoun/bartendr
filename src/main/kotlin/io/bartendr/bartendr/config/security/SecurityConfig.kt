@@ -14,15 +14,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository
-import javax.sql.DataSource
-
 
 @EnableWebSecurity
 @Configuration
 class SecurityConfig : WebSecurityConfigurerAdapter() {
-    @Autowired
-    lateinit var dataSource: DataSource
-
     @Autowired
     lateinit var appUserDetailsService: AppUserDetailsService
 
@@ -41,10 +36,6 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
     fun configureGlobal(auth: AuthenticationManagerBuilder) {
         auth.userDetailsService(appUserDetailsService)
             .passwordEncoder(passwordEncoder())
-            .and()
-            .jdbcAuthentication()
-            .usersByUsernameQuery("SELECT email AS username, password AS CREDENTIALS, enabled FROM users WHERE email = ?")
-            .dataSource(dataSource)
     }
 
     override fun configure(http: HttpSecurity) {
